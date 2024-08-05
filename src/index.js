@@ -18,11 +18,11 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           "&:hover": {
-            backgroundColor: "#222831",
+            backgroundColor: "#00ABFF",
             color: "white",
           },
           "&.Mui-selected": {
-            backgroundColor: "#222831",
+            backgroundColor: "#00ABFF",
             color: "white",
           },
         },

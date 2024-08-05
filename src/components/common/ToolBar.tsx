@@ -29,7 +29,7 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
+    width: `calc(97% - ${drawerWidth}px)`,
     marginLeft: `${drawerWidth}px`,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
@@ -72,33 +72,28 @@ const Navbar = ({ showDrawer, setShowDrawer }: NavBarProps) => {
         position="fixed"
         style={{
           zIndex: 12,
-          boxShadow: "0px 3px 10px rgba(0, 0, 0, 0.1)",
+          // boxShadow: "0px 3px 10px rgba(0, 0, 0, 0.6)",
+          boxShadow:'none',
+          margin: '.7%',
           padding: 4,
+          backgroundColor:'#fff',
+          borderRadius:'1rem'
         }}
       >
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(showDrawer && { display: "none" }) }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography
-            color={"white"}
-            variant="h5"
+            color={"black"}
+            variant="h6"
             noWrap
             style={{ flexGrow: 1 }}
           >
-            F.O.R Automatisation
+            Admin/Dashboard
           </Typography>
 
-          {user && user.username && (
+          {user && user.email && (
             <>
               <Typography color={"white"} noWrap>
-                {user.username}
+                {user.email}
               </Typography>
               <IconButton
             edge="end"

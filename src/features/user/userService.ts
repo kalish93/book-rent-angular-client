@@ -3,13 +3,13 @@ import { CreateUser } from "../../models/user";
 import { handleRequest } from "../../utils/apiService";
 
 export const UserService = {
-  login: async (userName: string, password: string) => {
+  login: async (email: string, password: string) => {
     const response = await fetch(LOGIN_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userName, password }),
+      body: JSON.stringify({ email, password }),
     });
     if (!response.ok) {
       throw new Error(response.statusText);
@@ -18,7 +18,7 @@ export const UserService = {
     const data = await response.json();
 
     return {
-      username: data.user.userName,
+      email: data.user.email,
       accessToken: data.accessToken,
       refreshToken: data.refreshToken,
     };
@@ -56,10 +56,10 @@ export const UserService = {
     }
   },
 
-  getUsers: async (page = 1, pageSize = 10) => {
+  getUsers: async () => {
     try {
       const response = await handleRequest(
-        `${USERS_URL}?page=${page}&pageSize=${pageSize}`,
+        USERS_URL,
         {
           method: "GET",
         }

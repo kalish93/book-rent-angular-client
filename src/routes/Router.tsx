@@ -2,10 +2,11 @@ import { createBrowserRouter } from "react-router-dom";
 import LoginComponent from "../components/auth/Login";
 import React from "react";
 import Home from "../components/Home";
-import UsersList from "../components/auth/UsersList";
 import DashboardHome from "../components/dashboard/DashboardHome";
 import ChangePassword from "../components/auth/changePassword";
 import PermissionList from "../components/auth/PermissionList";
+import SignUpComponent from "../components/auth/SignUp";
+import OwnersList from "../components/auth/OwnersList";
 
 
 const routes = createBrowserRouter([
@@ -18,8 +19,8 @@ const routes = createBrowserRouter([
         element: <DashboardHome />,
       },
       {
-        path: "users",
-        element: <UsersList />,
+        path: "owners",
+        element: <OwnersList />,
       },
       {
         path: "permissions/:id",
@@ -31,6 +32,10 @@ const routes = createBrowserRouter([
   {
     path: "/login",
     element: <LoginComponent />,
+  },
+  {
+    path: "/signup",
+    element: <SignUpComponent />,
   },
   {
     path: "/change-password",

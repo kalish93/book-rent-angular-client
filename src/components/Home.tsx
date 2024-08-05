@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Sidebar from "./common/SideBar";
 import Navbar from "./common/ToolBar";
 import { Navigate, Route, Routes } from "react-router-dom";
-import UsersList from "./auth/UsersList";
 import DashboardHome from "./dashboard/DashboardHome";
 import { Container, CssBaseline, styled } from "@mui/material";
 import PermissionList from "./auth/PermissionList";
@@ -10,6 +9,7 @@ import { hasPermission } from "../utils/checkPermission";
 import { PERMISSIONS } from "../core/permissions";
 import { jwtDecode } from "jwt-decode";
 import AppLogout from "./AppLogout";
+import OwnersList from "./auth/OwnersList";
 
 const drawerWidth = 240;
 
@@ -113,13 +113,13 @@ const Home = () => {
     <div style={{ display: "flex" }}>
       <Sidebar showDrawer={showDrawer} setShowDrawer={setShowDrawer} />
       <Main open={showDrawer}>
-        <Container sx={{margin: 0, maxWidth: "unset"}} maxWidth={false}> 
+        <Container sx={{margin: 0, maxWidth: "100%"}} maxWidth={false}> 
         <Routes>
           <Route
-            path="/users"
+            path="/owners"
             element={
               <ProtectedRoute
-                element={<UsersList />}
+                element={<OwnersList />}
                 permission={PERMISSIONS.GetUsers}
               />
             }

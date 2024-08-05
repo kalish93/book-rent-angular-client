@@ -1,11 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../models/user";
-import { PaginatedList } from "../../models/commons/paginatedList";
 
 interface UserState {
   user: null | any;
   accessToken: null | string;
-  users: PaginatedList<User>;
+  users: User[];
   loading: boolean;
   error: any | null;
   isError: boolean;
@@ -16,13 +15,7 @@ interface UserState {
 const initialState: UserState = {
   user: null,
   accessToken: null,
-  users: {
-    items: [],
-    totalCount: 0,
-    pageSize: 0,
-    currentPage: 1,
-    totalPages: 1,
-  },
+  users: [],
   loading: false,
   error: null,
   isError: false,
@@ -42,7 +35,7 @@ const userSlice = createSlice({
     loginSuccess: (
       state,
       action: PayloadAction<{
-        username: string;
+        email: string;
         accessToken: string;
         refreshToken: string;
       }>
@@ -69,13 +62,7 @@ const userSlice = createSlice({
     },
     registerUserSuccess: (state, action) => {
       const newUser = action.payload;
-      state.users = {
-        items: [newUser, ...(state.users?.items || [])],
-        totalCount: (state.users?.totalCount || 0) + 1,
-        pageSize: state.users?.pageSize || 10,
-        currentPage: state.users?.currentPage || 1,
-        totalPages: state.users?.totalPages || 1,
-      };
+      state.users = [newUser, ...(state.users || [])];
 
       state.loading = false;
     },
@@ -112,16 +99,16 @@ const userSlice = createSlice({
     },
     updateUserSuccess: (state, action) => {
       const updatedUser = action.payload;
-      const userIndex = state.users.items.findIndex(
-        (user) => user.id === updatedUser.id
-      );
-      if (userIndex !== -1) {
-        state.users.items = state.users.items.map((user) =>
-          user.id === updatedUser.id ? updatedUser : user
-        );
-      } else {
-        state.users.items = [updatedUser, ...state.users.items];
-      }
+      // const userIndex = state.users.items.findIndex(
+      //   (user) => user.id === updatedUser.id
+      // );
+      // if (userIndex !== -1) {
+      //   state.users.items = state.users.items.map((user) =>
+      //     user.id === updatedUser.id ? updatedUser : user
+      //   );
+      // } else {
+      //   state.users.items = [updatedUser, ...state.users.items];
+      // }
       state.loading = false;
     },
     updateUserFailure: (state, action) => {
@@ -137,14 +124,14 @@ const userSlice = createSlice({
     },
     deleteUserSuccess: (state, action) => {
       const deletedUser = action.payload;
-      state.users = {
-        items:
-          state.users?.items.filter((user) => user.id !== deletedUser.id) || [],
-        totalCount: (state.users?.totalCount || 0) - 1,
-        pageSize: state.users?.pageSize || 10,
-        currentPage: state.users?.currentPage || 1,
-        totalPages: state.users?.totalPages || 1,
-      };
+      // state.users = {
+      //   items:
+      //     state.users?.items.filter((user) => user.id !== deletedUser.id) || [],
+      //   totalCount: (state.users?.totalCount || 0) - 1,
+      //   pageSize: state.users?.pageSize || 10,
+      //   currentPage: state.users?.currentPage || 1,
+      //   totalPages: state.users?.totalPages || 1,
+      // };
       state.loading = false;
     },
     deleteUserFailure: (state, action) => {

@@ -23,7 +23,7 @@ import { AppDispatch } from "../../app/store";
 import loginImage from "../../assets/login-image.png";
 import loginImage2 from "../../assets/login-image-2.png";
 
-const LoginComponent: React.FC = () => {
+const SignUpComponent: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const loading = useSelector((state: any) => state.user.loading);
   const isAuthenticated = useSelector(
@@ -61,7 +61,7 @@ const LoginComponent: React.FC = () => {
     onSubmit: async (values) => {
       try {
         await dispatch(login(values.email, values.password));
-        showSnackbar("Login successful!", "success");
+        showSnackbar("Signed Up successfully!", "success");
       } catch (error) {
         showSnackbar("Invalid email or password", "error");
       }
@@ -127,7 +127,7 @@ const LoginComponent: React.FC = () => {
           </Box>
 
           <Typography variant="h6" style={{ marginBottom: "20px" }}>
-            Login into Book Rent
+            Signup into Book Rent
           </Typography>
 
           <form onSubmit={formik.handleSubmit}>
@@ -163,6 +163,52 @@ const LoginComponent: React.FC = () => {
                 {formik.touched.password && formik.errors.password}
               </FormHelperText>
             </FormControl>
+            <FormControl fullWidth margin="normal">
+              <TextField
+                label="Confirm Password"
+                type="password"
+                variant="outlined"
+                name="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched.password && Boolean(formik.errors.password)
+                }
+              />
+              <FormHelperText error>
+                {formik.touched.password && formik.errors.password}
+              </FormHelperText>
+            </FormControl>
+            <FormControl fullWidth margin="normal">
+            <TextField
+                label="Location"
+                variant="outlined"
+                name="email"
+                type="text"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.email && Boolean(formik.errors.email)}
+              />
+              <FormHelperText error>
+                {formik.touched.email && formik.errors.email}
+              </FormHelperText>
+            </FormControl>
+            <FormControl fullWidth margin="normal">
+            <TextField
+                label="Phone number"
+                variant="outlined"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.email && Boolean(formik.errors.email)}
+              />
+              <FormHelperText error>
+                {formik.touched.email && formik.errors.email}
+              </FormHelperText>
+            </FormControl>
             <FormControlLabel
               control={
                 <Checkbox
@@ -172,7 +218,7 @@ const LoginComponent: React.FC = () => {
                   onChange={formik.handleChange}
                 />
               }
-              label="Remember me"
+              label="I accept the Terms and Conditions"
             />
             <Button
               type="submit"
@@ -186,16 +232,16 @@ const LoginComponent: React.FC = () => {
               }}
               disabled={loading || !formik.isValid}
             >
-              Login
+              Sign Up
             </Button>
           </form>
           <Typography variant="body2" align="center">
-            Haven't an account?{" "}
+            Already have an account?{" "}
             <Link
-              href="/signup"
+              href="/login"
               style={{ textDecoration: "none", color: "#00ABFF" }}
             >
-              Sign up
+              Login
             </Link>
           </Typography>
           <Snackbar
@@ -218,4 +264,4 @@ const LoginComponent: React.FC = () => {
   );
 };
 
-export default LoginComponent;
+export default SignUpComponent;

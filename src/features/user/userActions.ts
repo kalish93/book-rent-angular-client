@@ -24,10 +24,10 @@ import { AppDispatch } from "../../app/store";
 import { CreateUser } from "../../models/user";
 
 export const login =
-  (username: string, password: string) => async (dispatch: AppDispatch) => {
+  (email: string, password: string) => async (dispatch: AppDispatch) => {
     try {
       dispatch(loginStart());
-      const response = await UserService.login(username, password);
+      const response = await UserService.login(email, password);
       dispatch(loginSuccess(response));
     } catch (error: any) {
       dispatch(
@@ -56,11 +56,10 @@ export const signUpUser =
     }
   };
 
-export const getUsers =
-  (page?: number, pageSize?: number) => async (dispatch: AppDispatch) => {
+export const getUsers = () => async (dispatch: AppDispatch) => {
     try {
       dispatch(getUsersStart());
-      const response = await UserService.getUsers(page, pageSize);
+      const response = await UserService.getUsers();
       dispatch(getUsersSuccess(response));
     } catch (error) {
       dispatch(getUsersFailure(error));
