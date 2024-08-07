@@ -129,6 +129,21 @@ const Sidebar = ({ showDrawer, setShowDrawer }: SideBarProps) => {
                 }}
           button
           component={Link}
+          to="/book-upload"
+          key="Book Upload"
+          selected={isLinkActive("/book-upload")}
+        >
+          <ListItemIcon sx={{ color: "inherit" }}>
+            <PersonOutlineOutlinedIcon />
+          </ListItemIcon>
+          <ListItemText primary="Book Upload" />
+        </ListItem>
+        <ListItem
+                style={{
+                  borderRadius:'.3rem'
+                }}
+          button
+          component={Link}
           to="/owners"
           key="Owners"
           selected={isLinkActive("/owners")}

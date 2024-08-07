@@ -2,6 +2,7 @@ import {
   changePasswordFailure,
   changePasswordStart,
   changePasswordSuccess,
+  completeProfileSuccess,
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
@@ -118,3 +119,19 @@ export const changePassword = (passwordData: any) => async (dispatch: AppDispatc
     dispatch(changePasswordFailure("Unknown error"));
   }
 };
+
+export const completeProfile =
+  (data: any) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(loginStart());
+      const response = await UserService.completeProfile(data);
+      dispatch(completeProfileSuccess(response));
+    } catch (error: any) {
+      dispatch(
+        loginFailure(
+          error.response ? error.response.data.error : "Unknown error"
+        )
+      );
+      throw error;
+    }
+  };

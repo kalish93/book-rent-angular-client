@@ -72,7 +72,6 @@ const Navbar = ({ showDrawer, setShowDrawer }: NavBarProps) => {
         position="fixed"
         style={{
           zIndex: 12,
-          // boxShadow: "0px 3px 10px rgba(0, 0, 0, 0.6)",
           boxShadow:'none',
           margin: '.7%',
           padding: 4,

@@ -1,4 +1,4 @@
-import { CHANGE_PASSWORD_URL, LOGIN_URL, USERS_URL } from "../../core/api-routes";
+import { CHANGE_PASSWORD_URL, COMPLETE_PROFILE_URL, LOGIN_URL, USERS_URL } from "../../core/api-routes";
 import { CreateUser } from "../../models/user";
 import { handleRequest } from "../../utils/apiService";
 
@@ -54,6 +54,24 @@ export const UserService = {
       console.error("Error in registerUser service:", error);
       return { success: false, error: "Unexpected error occurred" };
     }
+  },
+
+  completeProfile: async (userData: any) => {
+    const response = await await handleRequest(COMPLETE_PROFILE_URL, {
+      method: "POST",
+      body: userData,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    const data = await response.json();
+
+    return {
+      email: data.user.email,
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+    };
   },
 
   getUsers: async () => {

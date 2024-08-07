@@ -7,6 +7,7 @@ import ChangePassword from "../components/auth/changePassword";
 import PermissionList from "../components/auth/PermissionList";
 import SignUpComponent from "../components/auth/SignUp";
 import OwnersList from "../components/auth/OwnersList";
+import BookUpload from "../components/books/BookUpload";
 
 
 const routes = createBrowserRouter([
@@ -21,6 +22,10 @@ const routes = createBrowserRouter([
       {
         path: "owners",
         element: <OwnersList />,
+      },
+      {
+        path: "book-upload",
+        element: <BookUpload />,
       },
       {
         path: "permissions/:id",

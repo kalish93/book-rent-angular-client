@@ -49,6 +49,23 @@ const userSlice = createSlice({
       state.loading = false;
     },
 
+    completeProfileSuccess: (
+      state,
+      action: PayloadAction<{
+        email: string;
+        accessToken: string;
+        refreshToken: string;
+      }>
+    ) => {
+      state.user = action.payload;
+      state.accessToken = action.payload.accessToken;
+      localStorage.setItem("user", JSON.stringify(action.payload));
+      localStorage.setItem("accessToken", action.payload.accessToken);
+      localStorage.setItem("refreshToken", action.payload.refreshToken);
+      state.isAuthenticated = !!localStorage.getItem("accessToken");
+      state.loading = false;
+    },
+
     loginFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
@@ -177,7 +194,8 @@ export const {
   deleteUserSuccess,
   changePasswordFailure,
   changePasswordStart,
-  changePasswordSuccess
+  changePasswordSuccess,
+  completeProfileSuccess
 } = userSlice.actions;
 
 export const selectUser = (state: { user: UserState }) => state.user;

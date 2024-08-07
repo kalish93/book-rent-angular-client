@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "./common/SideBar";
 import Navbar from "./common/ToolBar";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -8,8 +8,13 @@ import PermissionList from "./auth/PermissionList";
 import { hasPermission } from "../utils/checkPermission";
 import { PERMISSIONS } from "../core/permissions";
 import { jwtDecode } from "jwt-decode";
-import AppLogout from "./AppLogout";
 import OwnersList from "./auth/OwnersList";
+import BookUpload from "./books/BookUpload";
+import ProfileCompletionModal from "./auth/ProfileCompletionModal";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../app/store";
+import { selectUser } from "../features/user/userSlice";
+import { completeProfile } from "../features/user/userActions";
 
 const drawerWidth = 240;
 
@@ -23,7 +28,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   }),
   marginLeft: `-${drawerWidth}px`,
   marginTop: "78px",
-  maxWidth: "99%",
+  width: `calc(100% - ${drawerWidth}px)`,
   ...(open && {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
@@ -31,7 +36,6 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     }),
     marginLeft: 0,
     padding: 0,
-    maxWidth: "80%",
   }),
 }));
 
@@ -104,9 +108,47 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
 const Home = () => {
   const [showDrawer, setShowDrawer] = useState(true);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
+
+  const dispatch = useDispatch<AppDispatch>();
+  const userState = useSelector(selectUser);
+  const { users, loading, error } = userState;
+
+  useEffect(() => {
+    if (selectedFile) {
+      const objectUrl = URL.createObjectURL(selectedFile);
+      setFilePreview(objectUrl);
+
+      // Clean up the object URL when the component unmounts or when the file changes
+      return () => URL.revokeObjectURL(objectUrl);
+    }
+  }, [selectedFile]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+      if (!decodedToken.name || decodedToken.name === '') {
+        setShowProfileModal(true);
+      }
+    }
+  }, []);
+
+  const handleProfileCompletionSubmit = (values: { name: string; profilePicture?: File | null }) => {
+    const data = new FormData();
+    data.append("name", values.name);
+    if (values.profilePicture) {
+      data.append("profilePicture", values.profilePicture);
+    }
+
+    dispatch(completeProfile(data));
+    setShowProfileModal(false);
+  };
+
 
   return (
-    <AppLogout>
     <>
       <CssBaseline />
       <Navbar showDrawer={showDrawer} setShowDrawer={setShowDrawer} />
@@ -121,6 +163,15 @@ const Home = () => {
               <ProtectedRoute
                 element={<OwnersList />}
                 permission={PERMISSIONS.GetUsers}
+              />
+            }
+          />
+
+          <Route
+            path="/book-upload"
+            element={
+              <ProtectedRoute
+                element={<BookUpload />}
               />
             }
           />
@@ -141,9 +192,13 @@ const Home = () => {
           </Routes>
         </Container>
       </Main>
+      <ProfileCompletionModal
+          open={showProfileModal}
+          onClose={() => setShowProfileModal(false)}
+          onSubmit={handleProfileCompletionSubmit}
+        />
     </div>
     </>
-    </AppLogout>
   );
 };
 
