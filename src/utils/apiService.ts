@@ -1,18 +1,22 @@
 import { refreshAccessToken, updateAccessToken } from "./tokenService";
 
 const headers = {
-  "Content-Type": "application/json",
   'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+  'Content-Type': 'application/json',
 };
 
 export async function handleRequest(url: any, options: any) {
   try {
+    const defaultHeaders = {
+      'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+    };
+    const mergedHeaders = {
+      ...defaultHeaders,
+      ...options.headers,
+    };
     const response = await fetch(url, {
       ...options,
-      headers:{
-        // "Content-Type": "application/json",
-        'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
-      },
+      headers: mergedHeaders
     });
     return response;
   } catch (error: any) {

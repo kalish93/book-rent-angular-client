@@ -10,5 +10,11 @@ export const CHANGE_PASSWORD_URL = `${BASE_URL}/change-password`
 export const PERMISSIONS_URL = `${BASE_URL}/permissions`
 export const CATEGORIES_URL = `${BASE_URL}/categories`
 export const BOOKS_URL = `${BASE_URL}/books`
+export const AVAILABLE_BOOKS_URL = `${BASE_URL}/all-books-by-category`
 export const UPLOAD_BOOKS_URL = `${BASE_URL}/upload-book`
+export const ALL_UPLOADED_BOOKS_URL = `${BASE_URL}/all-uploaded-books`
+export const CHANGE_BOOK_STATUS_URL = `${BASE_URL}/change-book-status`
+export const CHANGE_OWNER_STATUS_URL = `${BASE_URL}/change-owner-status`
+export const APPROVE_BOOK_OWNER_URL = `${BASE_URL}/approve-book-owner`
+export const INCOME_URL = `${BASE_URL}/income-by-month`
 

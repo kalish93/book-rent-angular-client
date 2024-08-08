@@ -13,7 +13,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
 } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { useDispatch, useSelector } from "react-redux";
@@ -118,6 +117,10 @@ const BookUpload = () => {
 
   const handleAddBookFormSubmit = (values: { name: string; author: string; category: string }) => {
     console.log("New Book Added:", values);
+    const formData = new FormData();
+    formData.append('name', values.name);
+    formData.append('author', values.author);
+    formData.append('categoryId', values.category);
     const dataToSend = {
         name: values.name,
         author: values.author,

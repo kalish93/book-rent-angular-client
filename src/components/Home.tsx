@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../app/store";
 import { selectUser } from "../features/user/userSlice";
 import { completeProfile } from "../features/user/userActions";
+import BooksList from "./books/BooksList";
 
 const drawerWidth = 240;
 
@@ -172,6 +173,14 @@ const Home = () => {
             element={
               <ProtectedRoute
                 element={<BookUpload />}
+              />
+            }
+          />
+          <Route
+            path="/books"
+            element={
+              <ProtectedRoute
+                element={<BooksList />}
               />
             }
           />

@@ -1,4 +1,4 @@
-import { CHANGE_PASSWORD_URL, COMPLETE_PROFILE_URL, LOGIN_URL, USERS_URL } from "../../core/api-routes";
+import { APPROVE_BOOK_OWNER_URL, CHANGE_OWNER_STATUS_URL, CHANGE_PASSWORD_URL, COMPLETE_PROFILE_URL, LOGIN_URL, USERS_URL } from "../../core/api-routes";
 import { CreateUser } from "../../models/user";
 import { handleRequest } from "../../utils/apiService";
 
@@ -32,10 +32,13 @@ export const UserService = {
     return localStorage.getItem("accessToken");
   },
 
-  registerUser: async (userData: CreateUser) => {
+  registerUser: async (userData: any) => {
     try {
-      const response = await handleRequest(USERS_URL, {
+      const response = await fetch(USERS_URL, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(userData),
       });
 
@@ -123,6 +126,9 @@ export const UserService = {
     try {
       const response = await handleRequest(`${USERS_URL}/${id}`, {
         method: "DELETE",
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       if (!response.ok) {
@@ -165,4 +171,59 @@ export const UserService = {
       return { success: false, error: "Unexpected error occurred" };
     }
   },
+
+  approveBookOwner: async (userId: any) => {
+    try {
+      const response = await handleRequest(APPROVE_BOOK_OWNER_URL, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userId),
+      });
+
+      if (!response.ok) {
+        let errorMessage = `Bad Request: ${response.statusText}`;
+
+        const data = await response.json();
+        errorMessage = data.error || errorMessage;
+
+        return { success: false, error: errorMessage };
+      }
+
+      const data = await response.json();
+      return { success: true, data };
+    } catch (error) {
+      console.error("Error in update user service:", error);
+      return { success: false, error: "Unexpected error occurred" };
+    }
+  },
+
+  changeOwnerStatus: async (userId: any) => {
+    try {
+      const response = await handleRequest(CHANGE_OWNER_STATUS_URL, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userId),
+      });
+
+      if (!response.ok) {
+        let errorMessage = `Bad Request: ${response.statusText}`;
+
+        const data = await response.json();
+        errorMessage = data.error || errorMessage;
+
+        return { success: false, error: errorMessage };
+      }
+
+      const data = await response.json();
+      return { success: true, data };
+    } catch (error) {
+      console.error("Error in update book service:", error);
+      return { success: false, error: "Unexpected error occurred" };
+    }
+  },
+
 };

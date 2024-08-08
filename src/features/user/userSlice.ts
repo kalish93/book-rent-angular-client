@@ -141,14 +141,7 @@ const userSlice = createSlice({
     },
     deleteUserSuccess: (state, action) => {
       const deletedUser = action.payload;
-      // state.users = {
-      //   items:
-      //     state.users?.items.filter((user) => user.id !== deletedUser.id) || [],
-      //   totalCount: (state.users?.totalCount || 0) - 1,
-      //   pageSize: state.users?.pageSize || 10,
-      //   currentPage: state.users?.currentPage || 1,
-      //   totalPages: state.users?.totalPages || 1,
-      // };
+      state.users = state.users.filter((user) => user.id !== deletedUser.id) || [];
       state.loading = false;
     },
     deleteUserFailure: (state, action) => {
@@ -170,6 +163,36 @@ const userSlice = createSlice({
     changePasswordFailure: (state, action) => {
       state.error = action.payload;
       state.isError = true;
+      state.loading = false;
+    },
+
+    approveBookOwnerSuccess: (state, action) => {
+      const updatedUser = action.payload.data;
+      const UserIndex = state.users.findIndex(
+        (User: any) => User.id === updatedUser.id
+      );
+      if (UserIndex !== -1) {
+        state.users = state.users.map((User: any) =>
+          User.id === updatedUser.id ? updatedUser : User
+        );
+      } else {
+        state.users = [updatedUser, ...state.users];
+      }
+      state.loading = false;
+    },
+
+    changeOwnerStatusSuccess: (state, action) => {
+      const updatedUser = action.payload.data;
+      const UserIndex = state.users.findIndex(
+        (User: any) => User.id === updatedUser.id
+      );
+      if (UserIndex !== -1) {
+        state.users = state.users.map((User: any) =>
+          User.id === updatedUser.id ? updatedUser : User
+        );
+      } else {
+        state.users = [updatedUser, ...state.users];
+      }
       state.loading = false;
     },
   },
@@ -195,7 +218,9 @@ export const {
   changePasswordFailure,
   changePasswordStart,
   changePasswordSuccess,
-  completeProfileSuccess
+  completeProfileSuccess,
+  approveBookOwnerSuccess,
+  changeOwnerStatusSuccess
 } = userSlice.actions;
 
 export const selectUser = (state: { user: UserState }) => state.user;

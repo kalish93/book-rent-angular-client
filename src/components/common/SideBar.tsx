@@ -15,11 +15,14 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import logo from "../../assets/logo.png";
+import { logout } from "../../features/user/userActions";
+import { AppDispatch } from "../../app/store";
+import { useDispatch } from "react-redux";
 
 const drawerWidth = 255;
 
@@ -44,6 +47,8 @@ interface SideBarProps {
 const Sidebar = ({ showDrawer, setShowDrawer }: SideBarProps) => {
   const location = useLocation();
   const [open, setOpen] = useState([false, false, false, false, false]);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const handleClick = (idx: number) => {
     setOpen((prev) => {
@@ -54,6 +59,11 @@ const Sidebar = ({ showDrawer, setShowDrawer }: SideBarProps) => {
   };
 
   const isLinkActive = (pathname: string) => location.pathname === pathname;
+  
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
 
   return (
     <Drawer
@@ -209,11 +219,9 @@ const Sidebar = ({ showDrawer, setShowDrawer }: SideBarProps) => {
               style={{
                 borderRadius:'.3rem'
               }}
-        button
-        component={Link}
-        to="/logout"
+        
         key="Logout"
-        selected={isLinkActive("/logout")}
+        onClick={handleLogout}
       >
         <ListItemIcon sx={{ color: "inherit" }}>
           <ExitToAppIcon />

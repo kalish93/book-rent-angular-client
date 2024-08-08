@@ -6,7 +6,9 @@ interface BookState {
   loading: boolean;
   error: any | null;
   isError: boolean;
-  uploadedBooks: any
+  uploadedBooks: any;
+  categorizedAvailableBooks: any,
+  incomeByMonth: any;
 }
 
 const initialState: BookState = {
@@ -15,7 +17,9 @@ const initialState: BookState = {
   loading: false,
   error: null,
   isError: false,
-  uploadedBooks: []
+  uploadedBooks: [],
+  categorizedAvailableBooks: [],
+  incomeByMonth: {}
 };
 
 const bookSlice = createSlice({
@@ -32,6 +36,27 @@ const bookSlice = createSlice({
       action
     ) => {
       state.books = action.payload;
+      state.loading = false;
+    },
+    getCategorizedAvailableBooksSuccess: (
+      state,
+      action
+    ) => {
+      state.categorizedAvailableBooks = action.payload;
+      state.loading = false;
+    },
+    getIncomeByMonthSuccess: (
+      state,
+      action
+    ) => {
+      state.incomeByMonth = action.payload;
+      state.loading = false;
+    },
+    getAllUploadedBooksSuccess: (
+      state,
+      action
+    ) => {
+      state.uploadedBooks = action.payload;
       state.loading = false;
     },
     getCategoriesSuccess: (
@@ -58,6 +83,21 @@ const bookSlice = createSlice({
       state.loading = false;
     },
 
+    changeBookStatusSuccess: (state, action) => {
+      const updatedbook = action.payload;
+      const bookIndex = state.uploadedBooks.findIndex(
+        (book: any) => book.id === updatedbook.id
+      );
+      if (bookIndex !== -1) {
+        state.uploadedBooks = state.uploadedBooks.map((book: any) =>
+          book.id === updatedbook.id ? updatedbook : book
+        );
+      } else {
+        state.uploadedBooks = [updatedbook, ...state.uploadedBooks];
+      }
+      state.loading = false;
+    },
+
     bookFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
@@ -72,7 +112,11 @@ export const {
  getBooksSuccess,
  getCategoriesSuccess,
  createBooksSuccess,
- uploadBookSuccess
+ uploadBookSuccess,
+ getAllUploadedBooksSuccess,
+ changeBookStatusSuccess,
+ getCategorizedAvailableBooksSuccess,
+ getIncomeByMonthSuccess
 } = bookSlice.actions;
 
 export const selectBook = (state: { book: BookState }) => state.book;

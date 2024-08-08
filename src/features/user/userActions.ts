@@ -1,4 +1,6 @@
 import {
+  approveBookOwnerSuccess,
+  changeOwnerStatusSuccess,
   changePasswordFailure,
   changePasswordStart,
   changePasswordSuccess,
@@ -41,7 +43,7 @@ export const login =
   };
 
 export const signUpUser =
-  (userData: CreateUser) => async (dispatch: AppDispatch) => {
+  (userData: any) => async (dispatch: AppDispatch) => {
     try {
       dispatch(registerUserStart());
 
@@ -126,6 +128,37 @@ export const completeProfile =
       dispatch(loginStart());
       const response = await UserService.completeProfile(data);
       dispatch(completeProfileSuccess(response));
+    } catch (error: any) {
+      dispatch(
+        loginFailure(
+          error.response ? error.response.data.error : "Unknown error"
+        )
+      );
+      throw error;
+    }
+  };
+
+  export const approveBookOwner =
+  (data: any) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(loginStart());
+      const response = await UserService.approveBookOwner(data);
+      dispatch(approveBookOwnerSuccess(response));
+    } catch (error: any) {
+      dispatch(
+        loginFailure(
+          error.response ? error.response.data.error : "Unknown error"
+        )
+      );
+      throw error;
+    }
+  };
+  export const changeOwnerStatus =
+  (data: any) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(loginStart());
+      const response = await UserService.changeOwnerStatus(data);
+      dispatch(changeOwnerStatusSuccess(response));
     } catch (error: any) {
       dispatch(
         loginFailure(

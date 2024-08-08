@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { login } from "../../features/user/userActions";
+import { login, signUpUser } from "../../features/user/userActions";
 import {
   LinearProgress,
   TextField,
@@ -22,6 +22,20 @@ import { useNavigate } from "react-router-dom";
 import { AppDispatch } from "../../app/store";
 import loginImage from "../../assets/login-image.png";
 import loginImage2 from "../../assets/login-image-2.png";
+
+import { z } from "zod";
+
+// Define the schema with Zod
+const validationSchema = z.object({
+  email: z.string().email("Invalid email address").nonempty("Email address is required"),
+  password: z.string().min(6, "Password must be at least 6 characters long").nonempty("Password is required"),
+  passwordConfirmation: z.string().min(6, "Password confirmation must be at least 6 characters long").nonempty("Password confirmation is required"),
+  location: z.string().optional(),
+  phoneNumber: z.string().optional(),
+}).refine(data => data.password === data.passwordConfirmation, {
+  message: "Passwords don't match",
+  path: ["passwordConfirmation"], // Path to the field where the error should be displayed
+});
 
 const SignUpComponent: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -50,20 +64,40 @@ const SignUpComponent: React.FC = () => {
     initialValues: {
       email: "",
       password: "",
-      rememberMe: false,
+      passwordConfirmation: "",
+      location: "",
+      phoneNumber: "",
     },
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email address is required"),
-      password: Yup.string().required("Password is required"),
-    }),
+    validate: (values) => {
+      try {
+        validationSchema.parse(values);
+        return {}; // No errors
+      } catch (err) {
+        if (err instanceof z.ZodError) {
+          const errors: { [key: string]: string } = {};
+          err.errors.forEach((error) => {
+            if (error.path.length) {
+              errors[error.path[0]] = error.message;
+            }
+          });
+          return errors;
+        }
+        return {};
+      }
+    },
     onSubmit: async (values) => {
       try {
-        await dispatch(login(values.email, values.password));
-        showSnackbar("Signed Up successfully!", "success");
+        const dataToSend = {
+         email: values.email, 
+         password: values.password, 
+         location: values.location, 
+         phoneNumber: values.phoneNumber,
+         passwordConfirmation: values.passwordConfirmation
+        }
+        await dispatch(signUpUser(dataToSend));
+        showSnackbar("Sign-up successful!", "success");
       } catch (error) {
-        showSnackbar("Invalid email or password", "error");
+        showSnackbar("Sign-up failed", "error");
       }
     },
   });
@@ -86,7 +120,7 @@ const SignUpComponent: React.FC = () => {
       >
         <img
           src={loginImage}
-          alt="Book Rent Logo"
+          alt="Sign Up Logo"
           style={{ maxWidth: "60%" }}
         />
       </Grid>
@@ -118,7 +152,7 @@ const SignUpComponent: React.FC = () => {
               marginBottom: "20px",
             }}
           >
-            <img
+                   <img
               src={loginImage2}
               alt="Book Rent Logo"
               style={{ maxWidth: "10%", marginRight: "10px" }}
@@ -127,7 +161,7 @@ const SignUpComponent: React.FC = () => {
           </Box>
 
           <Typography variant="h6" style={{ marginBottom: "20px" }}>
-            Signup into Book Rent
+            Create your account
           </Typography>
 
           <form onSubmit={formik.handleSubmit}>
@@ -155,9 +189,7 @@ const SignUpComponent: React.FC = () => {
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={
-                  formik.touched.password && Boolean(formik.errors.password)
-                }
+                error={formik.touched.password && Boolean(formik.errors.password)}
               />
               <FormHelperText error>
                 {formik.touched.password && formik.errors.password}
@@ -168,58 +200,45 @@ const SignUpComponent: React.FC = () => {
                 label="Confirm Password"
                 type="password"
                 variant="outlined"
-                name="password"
-                value={formik.values.password}
+                name="passwordConfirmation"
+                value={formik.values.passwordConfirmation}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={
-                  formik.touched.password && Boolean(formik.errors.password)
-                }
+                error={formik.touched.passwordConfirmation && Boolean(formik.errors.passwordConfirmation)}
               />
               <FormHelperText error>
-                {formik.touched.password && formik.errors.password}
+                {formik.touched.passwordConfirmation && formik.errors.passwordConfirmation}
               </FormHelperText>
             </FormControl>
             <FormControl fullWidth margin="normal">
-            <TextField
+              <TextField
                 label="Location"
                 variant="outlined"
-                name="email"
+                name="location"
                 type="text"
-                value={formik.values.email}
+                value={formik.values.location}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={formik.touched.email && Boolean(formik.errors.email)}
+                error={formik.touched.location && Boolean(formik.errors.location)}
               />
               <FormHelperText error>
-                {formik.touched.email && formik.errors.email}
+                {formik.touched.location && formik.errors.location}
               </FormHelperText>
             </FormControl>
             <FormControl fullWidth margin="normal">
-            <TextField
+              <TextField
                 label="Phone number"
                 variant="outlined"
-                name="email"
-                value={formik.values.email}
+                name="phoneNumber"
+                value={formik.values.phoneNumber}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={formik.touched.email && Boolean(formik.errors.email)}
+                error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
               />
               <FormHelperText error>
-                {formik.touched.email && formik.errors.email}
+                {formik.touched.phoneNumber && formik.errors.phoneNumber}
               </FormHelperText>
             </FormControl>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="rememberMe"
-                  color="primary"
-                  checked={formik.values.rememberMe}
-                  onChange={formik.handleChange}
-                />
-              }
-              label="I accept the Terms and Conditions"
-            />
             <Button
               type="submit"
               variant="contained"
